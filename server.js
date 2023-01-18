@@ -6,16 +6,24 @@ const fs = require('fs')
 const multer = require('multer')
 const database = require('./database')
 const upload = multer({ dest: 'images/' })
-
+const path = require('path')
 const app = express()
 app.use(express.urlencoded({ extended: true }))
 // app.use(express.static('dist'))
-app.use('/', express.static('dist'))
+// app.use('/', express.static('dist'))
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
+
 
 app.get("/api/images", async (req, res) => {
     const getImages = await database.getImages()
     res.send(getImages)
 })
+
+app.get('/', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
 
 app.get('/api', (req, res) => {
     console.log('req.query', req.query)
