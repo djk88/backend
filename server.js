@@ -9,7 +9,8 @@ const upload = multer({ dest: 'images/' })
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('dist'))
+// app.use(express.static('dist'))
+app.use('/', express.static('dist'))
 
 app.get("/api/images", async (req, res) => {
     const getImages = await database.getImages()
