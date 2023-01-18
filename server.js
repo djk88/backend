@@ -8,12 +8,12 @@ const database = require('./database')
 const upload = multer({ dest: 'images/' })
 const path = require('path')
 const app = express()
-app.use(express.urlencoded({ extended: true }))
 
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
+    res.render(path.join(__dirname, 'dist/index.html'));
 });
 app.get("/api/images", async (req, res) => {
     const getImages = await database.getImages()
