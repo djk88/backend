@@ -10,11 +10,8 @@ const path = require('path')
 const app = express()
 
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static('dist'))
 
-app.get('/', (_req, res) => {
-    res.render(path.join(__dirname, 'dist/index.html'));
-});
 app.get("/api/images", async (req, res) => {
     const getImages = await database.getImages()
     res.send(getImages)
@@ -42,6 +39,10 @@ app.post('/api/images', upload.single('image'), async (req, res) => {
     res.send({ description, imagePath })
     res.send(createImages)
 })
+
+app.get('*', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
 
 const port = process.env.PORT || 8080
 
