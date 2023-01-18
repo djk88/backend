@@ -9,6 +9,7 @@ const upload = multer({ dest: 'images/' })
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('dist'))
 
 app.get("/api/images", async (req, res) => {
     const getImages = await database.getImages()
@@ -32,8 +33,6 @@ app.post('/api/images', upload.single('image'), async (req, res) => {
     const imagePath = req.file.path
     const description = req.body.description
     const createImages = await database.addImage(imagePath, description)
-
-    // Save this data to a database probably
 
     console.log(description, imagePath)
     res.send({ description, imagePath })
