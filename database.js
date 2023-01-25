@@ -1,6 +1,10 @@
-const mysql = require("mysql2")
-const dotenv = require("dotenv")
+// const mysql = require("mysql2")
+// const dotenv = require("dotenv")
+
+import mysql from 'mysql2'
+import dotenv from 'dotenv'
 dotenv.config()
+
 
 const pool = mysql
   .createPool({
@@ -8,10 +12,11 @@ const pool = mysql
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
+    port: process.env.MYSQL_PORT || 3306,
   })
   .promise()
 
-async function getImages() {
+export async function getImages() {
   let query = `
   SELECT *
   FROM images
@@ -21,9 +26,9 @@ async function getImages() {
   const [rows] = await pool.query(query);
   return rows
 }
-exports.getImages = getImages
 
-async function getImage(id) {
+
+export async function getImage(id) {
   let query = `
   SELECT *
   FROM images
@@ -34,9 +39,9 @@ async function getImage(id) {
   const result = rows[0];
   return result
 }
-exports.getImage = getImage
 
-async function addImage(filePath, description) {
+
+export async function addImage(filePath, description) {
   let query = `
   INSERT INTO images (file_path, description)
   VALUES(?, ?)
@@ -47,6 +52,16 @@ async function addImage(filePath, description) {
 
   return await getImage(id)
 }
-exports.addImage = addImage
+
+export async function deleteImage(id) {
+  let query = `
+  DELETE FROM images
+  WHERE id = ?
+  `
+  const [result] = await pool.query
+    (query, [id]);
+  return result
+}
+
 
 
